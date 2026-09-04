@@ -14,10 +14,15 @@ Node *insertb(Node *head);
 
 Node *inserte(Node *head);
 
+Node *insertpos(Node *head);
+
+int count(Node *head);
+
 Node *freeList(Node *head);
 
 int main()
 {
+    int n;
     Node *head=NULL;
 
     int running=1,ch;
@@ -28,6 +33,8 @@ int main()
         printf("2. Display List\n");
         printf("3. Insert at Beginning\n");
         printf("4. Insert at End\n");
+        printf("5. Insert at Position\n");
+        printf("12. Count Nodes\n");
         printf("14. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &ch);
@@ -45,6 +52,13 @@ int main()
                 break;
             case 4:
                 head=inserte(head);
+                break;
+            case 5:
+                head=insertpos(head);
+                break;
+            case 12:
+                n=count(head);
+                printf("Number of nodes: %d\n", n);
                 break;
             case 14:
                 running=0;
@@ -187,6 +201,75 @@ Node *inserte(Node *head)
         newNode->next=head;
         return head;
     }
+}
+
+Node *insertpos(Node *head)
+{
+    int pos, n;
+    printf("Enter the position to insert: ");
+    scanf("%d", &pos);
+    n=count(head);
+    if(pos<=0 || pos>n+1)
+    {
+        printf("Invalid position\n");
+        return head;
+    }
+    else
+    {
+        if(pos==1)
+        {
+            head=insertb(head);
+            return head;
+        }
+        else if(pos==n+1)
+        {
+            head=inserte(head);
+            return head;
+        }
+        else
+        {
+            Node *newNode=NULL;
+            newNode=malloc(sizeof(*newNode));
+            if(newNode==NULL)
+            {
+                printf("Memory allocation failed\n");
+                return head;
+            }
+            printf("ENter the new data: ");
+            scanf("%d", &(newNode->data));
+            newNode->next=NULL;
+            Node *temp=head;
+            int i=1;
+            while(i<pos-1)
+            {
+                temp=temp->next;
+                i++;
+            }
+            newNode->next=temp->next;
+            temp->next=newNode;
+            return head;
+        }
+    }
+
+}
+
+int count(Node *head)
+{
+    Node *temp=head;
+    int count=0;
+    if(head==NULL)
+    {
+        return count;
+    }
+    else
+    {
+        do
+        {
+            count++;
+            temp=temp->next;
+        }while(temp!=head);
+    }
+    return count;
 }
 
 Node *freeList(Node *head)
