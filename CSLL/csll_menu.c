@@ -16,6 +16,12 @@ Node *inserte(Node *head);
 
 Node *insertpos(Node *head);
 
+Node *deleteb(Node *head);
+
+Node *deletee(Node *head);
+
+Node *deletepos(Node *head);
+
 int count(Node *head);
 
 Node *freeList(Node *head);
@@ -34,6 +40,9 @@ int main()
         printf("3. Insert at Beginning\n");
         printf("4. Insert at End\n");
         printf("5. Insert at Position\n");
+        printf("6. Delete at Beginning\n");
+        printf("7. Delete at End\n");
+        printf("8. Delete at Position\n");
         printf("12. Count Nodes\n");
         printf("14. Exit\n");
         printf("Enter your choice: ");
@@ -42,6 +51,7 @@ int main()
         switch(ch)
         {
             case 1:
+                head=freeList(head);
                 head=create();
                 break;
             case 2:
@@ -55,6 +65,15 @@ int main()
                 break;
             case 5:
                 head=insertpos(head);
+                break;
+            case 6:
+                head=deleteb(head);
+                break;
+            case 7:
+                head=deletee(head);
+                break;
+            case 8:
+                head=deletepos(head);
                 break;
             case 12:
                 n=count(head);
@@ -153,8 +172,8 @@ Node *insertb(Node *head)
     
     if(head==NULL)
     {
-        head=newNode;
-        return head;
+        newNode->next=newNode;
+        return newNode;
     }
     else
     {
@@ -187,8 +206,8 @@ Node *inserte(Node *head)
     newNode->next=NULL; 
     if(head==NULL)
     {
-        head=newNode;
-        return head;
+        newNode->next=newNode;
+        return newNode;
     }
     else
     {
@@ -235,7 +254,7 @@ Node *insertpos(Node *head)
                 printf("Memory allocation failed\n");
                 return head;
             }
-            printf("ENter the new data: ");
+            printf("Enter the new data: ");
             scanf("%d", &(newNode->data));
             newNode->next=NULL;
             Node *temp=head;
@@ -251,6 +270,106 @@ Node *insertpos(Node *head)
         }
     }
 
+}
+
+Node *deleteb(Node *head)
+{
+    if(head==NULL)
+    {
+        printf("List is empty\n");
+        return NULL;
+    }
+    else if(head->next==head)
+    {
+        free(head);
+        return NULL;
+    }
+    else
+    {
+        Node *temp=head;
+        Node *last=NULL;
+        Node *oldNode=NULL;
+        do
+        {   
+            temp=temp->next;
+        }while(temp->next!=head);
+        last=temp;
+        oldNode=head;
+        last->next=head->next;
+        head=head->next;
+        free(oldNode);
+        return head;
+    }
+}
+
+Node *deletee(Node *head)
+{
+    if(head==NULL)
+    {
+        printf("List is empty\n");
+        return NULL;
+    }
+    else if(head->next==head)
+    {
+        free(head);
+        return NULL;
+    }
+    else
+    {
+        Node *temp=head;
+        Node *prev=NULL;
+        Node *oldNode=NULL;
+        do
+        {
+            prev=temp;
+            temp=temp->next;
+        }while(temp->next!=head);
+        oldNode=temp;
+        prev->next=head;
+        free(oldNode);
+        return head;
+    }
+}
+
+Node *deletepos(Node *head)
+{
+    int pos,n;
+    printf("Enter the position to delete: ");
+    scanf("%d", &pos);
+    n=count(head);
+    if(pos<1 || pos>n)
+    {
+        printf("Invalid Position\n");
+        return head;
+    }
+    else
+    {
+        if(pos==1)
+        {
+            head=deleteb(head);
+            return head;
+        }
+        else if(pos==n)
+        {
+            head=deletee(head);
+            return head;
+        }
+        else
+        {
+            Node *temp=head;
+            Node *oldNode=NULL;
+            int i=1;
+            for(i=1;i<pos-1;i++)
+            {
+                temp=temp->next;
+            }
+            oldNode=temp->next;
+            temp->next=oldNode->next;
+            free(oldNode);
+            oldNode=NULL;
+            return head;
+        }
+    }
 }
 
 int count(Node *head)
