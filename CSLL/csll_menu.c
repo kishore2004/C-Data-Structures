@@ -22,6 +22,12 @@ Node *deletee(Node *head);
 
 Node *deletepos(Node *head);
 
+void search(Node *head);
+
+Node *update(Node *head);
+
+Node *reverse(Node *head);
+
 int count(Node *head);
 
 Node *freeList(Node *head);
@@ -30,7 +36,6 @@ int main()
 {
     int n;
     Node *head=NULL;
-
     int running=1,ch;
     while(running)
     {
@@ -43,8 +48,11 @@ int main()
         printf("6. Delete at Beginning\n");
         printf("7. Delete at End\n");
         printf("8. Delete at Position\n");
+        printf("9. Search Element\n");
+        printf("10. Update Element\n");
+        printf("11. Reverse List\n");
         printf("12. Count Nodes\n");
-        printf("14. Exit\n");
+        printf("13. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &ch);
 
@@ -75,11 +83,20 @@ int main()
             case 8:
                 head=deletepos(head);
                 break;
+            case 9:
+                search(head);
+                break;
+            case 10:
+                head=update(head);
+                break;
+            case 11:
+                head=reverse(head);
+                break;
             case 12:
                 n=count(head);
                 printf("Number of nodes: %d\n", n);
                 break;
-            case 14:
+            case 13:
                 running=0;
                 head=freeList(head);
                 break;
@@ -372,6 +389,104 @@ Node *deletepos(Node *head)
     }
 }
 
+void search(Node *head)
+{
+    int i=0;
+    if(head==NULL)
+    {
+        printf("The List is empty\n");
+    }
+    else
+    {
+        int x,i=1;
+        printf("Enter the value to search: ");
+        scanf("%d", &x);
+
+        Node *temp =head;
+        do
+        {
+            if(temp->data==x)
+            {
+                printf("Element found at node: %d\n", i);
+                return;
+            }
+            i++;
+            temp=temp->next;
+        }while(temp!=head);
+
+        printf("Element not found\n");
+        return;
+    }
+}
+
+Node *update(Node *head)
+{
+    if(head==NULL)
+    {
+        printf("The list is empty\n");
+        return head;
+    }
+    else
+    {
+        int pos,n;
+        n=count(head);
+        printf("Enter the position to update: ");
+        scanf("%d", &pos);
+
+        n=count(head);
+        if(pos<1||pos>n)
+        {
+            printf("Invalid position\n");
+            return head;
+        }
+        else
+        {
+            int i=1;
+            Node *temp=head;
+            do
+            {
+                if(i==pos)
+                {
+                    printf("Enter the new data: \n");
+                    scanf("%d", &(temp->data));
+                    return head;
+                }
+                i++;
+                temp=temp->next;
+            }while(temp!=head);
+        }
+    }
+}
+
+Node *reverse(Node *head)
+{
+    if(head==NULL)
+    {
+        printf("The list is empty\n");
+        return head;
+    }
+    else if(head->next==head)
+    {
+        return head;
+    }
+    else
+    {
+        Node *prev=NULL;
+        Node *current=head;
+        Node *next=NULL;
+        Node *oldNode=head;
+        do
+        {
+            next=current->next;
+            current->next=prev;
+            prev=current;
+            current=next;
+        }while(current!=head);
+        oldNode->next=prev;
+        head=prev;
+        return head;
+    }
+}
 int count(Node *head)
 {
     Node *temp=head;
